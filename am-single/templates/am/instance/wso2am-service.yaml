@@ -27,9 +27,6 @@ spec:
     - name: pass-through-http
       protocol: TCP
       port: 8280
-    - name: pass-through-https
-      protocol: TCP
-      port: 8243
     - name: binary
       protocol: TCP
       port: 9611

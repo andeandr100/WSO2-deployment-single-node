@@ -30,3 +30,8 @@ spec:
       port: 9443
       targetPort: 9443
       nodePort: 30380
+    - name: pass-through-https
+      protocol: TCP
+      port: 8243
+      targetPort: 8243
+      nodePort: 30381
