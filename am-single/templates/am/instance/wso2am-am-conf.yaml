@@ -59,13 +59,6 @@ data:
     validationQuery = "SELECT 1"
 
     [keystore.tls]
-    file_name =  "wso2carbon.jks"
-    type =  "JKS"
-    password =  "wso2carbon"
-    alias =  "wso2carbon"
-    key_password =  "wso2carbon"
-
-    [keystore.tls]
     file_name =  "tls-keystore.jks"
     type =  "JKS"
     password =  "{{tls-keystore-password}}"
