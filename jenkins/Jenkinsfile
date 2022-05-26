@@ -35,8 +35,6 @@ pipeline {
 
         stage('deploy helm chart'){
             steps {
-                sh ('cat ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml')
-
                 withCredentials([usernamePassword(credentialsId: 'wso2-admin-password', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     // the code here can access $pass and $user
                     sh ("sed -i 's/{{wso2-password}}/$pass/' ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml")
@@ -54,10 +52,7 @@ pipeline {
                     sh ("sed -i 's/{{internal-keystore-password}}/$pass/' ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml")
                 }
 
-                sh ('whoami')
-                sh ('pwd')
-                sh ('cat ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml')
-                //sh ('helm upgrade --install wso2 ${WORKSPACE}/am-single --namespace wso2 --create-namespace -f ${WORKSPACE}/am-single/values.yaml')
+                sh ('helm upgrade --install wso2 ${WORKSPACE}/am-single --namespace wso2 --create-namespace -f ${WORKSPACE}/am-single/values.yaml')
 
                 echo 'build docker image'
             }
