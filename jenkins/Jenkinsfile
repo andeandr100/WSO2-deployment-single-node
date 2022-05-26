@@ -25,9 +25,9 @@ pipeline {
                     sh ('cp /mnt/storage/backup/wso2/internal-keystore.jks internal-keystore.jks')
                     sh ('cp /mnt/storage/backup/wso2/tls-keystore.jks tls-keystore.jks')
 
-                    //sh ('docker build -t wso2/am:latest .')
-                    //sh ('docker tag wso2/am:latest localhost:32000/wso2:latest')
-                    //sh ('docker push localhost:32000/wso2:latest')
+                    sh ('docker build -t wso2/am:latest .')
+                    sh ('docker tag wso2/am:latest localhost:32000/wso2:latest')
+                    sh ('docker push localhost:32000/wso2:latest')
                 }
             }
         }
