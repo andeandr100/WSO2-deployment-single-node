@@ -76,6 +76,8 @@ RUN \
 # add the WSO2 product distribution to user's home directory
 RUN wget -O ${WSO2_SERVER}.zip "${WSO2_SERVER_DIST_URL}"
 
+
+
 RUN unzip -d ${USER_HOME} ${WSO2_SERVER}.zip \
     && chown wso2carbon:wso2 -R ${WSO2_SERVER_HOME} \
     && mkdir ${USER_HOME}/wso2-tmp \
@@ -93,8 +95,10 @@ WORKDIR ${USER_HOME}
 ENV WORKING_DIRECTORY=${USER_HOME} \
     WSO2_SERVER_HOME=${WSO2_SERVER_HOME}
 
+# Install the postgresql driver
+RUN wget -O ${WSO2_SERVER_HOME}/repository/components/lib/postgresql-42.2.23.jar  "https://jdbc.postgresql.org/download/postgresql-42.3.6.jar"
+
 # Install customization
-COPY --chown=wso2carbon:wso2 postgresql-42.2.23.jar ${WSO2_SERVER_HOME}/repository/components/lib/
 COPY --chown=wso2carbon:wso2 client-truststore.jks ${WSO2_SERVER_HOME}/repository/resources/security/
 COPY --chown=wso2carbon:wso2 tls-keystore.jks ${WSO2_SERVER_HOME}/repository/resources/security/
 COPY --chown=wso2carbon:wso2 internal-keystore.jks ${WSO2_SERVER_HOME}/repository/resources/security/
