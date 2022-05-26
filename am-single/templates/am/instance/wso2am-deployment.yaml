@@ -33,22 +33,6 @@ spec:
         deployment: {{ template "am.resource.prefix" . }}-am
         node: {{ template "am.resource.prefix" . }}-am
     spec:
-      initContainers:
-        - name: init-mysql-db
-          image: busybox:1.32
-          command: ['sh', '-c', 'echo -e "Checking for the availability of MySQL Server deployment"; while ! nc -z "wso2am-mysql-db-service" 3306; do sleep 1; printf "-"; done; echo -e "  >> MySQL Server has started";']
-        - name: init-mysql-connector-download
-          image: busybox:1.32
-          command:
-            - /bin/sh
-            - "-c"
-            - |
-              set -e
-              connector_version=8.0.17
-              wget https://jdbc.postgresql.org/download/postgresql-42.3.6.jar -P /postgres-connector-jar/
-          volumeMounts:
-            - name: postgres-connector-jar
-              mountPath: /postgres-connector-jar
       containers:
         - name: wso2am
 {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.am) | indent 10 }}
@@ -103,19 +87,8 @@ spec:
           volumeMounts:
             - name: wso2am-conf
               mountPath: /home/wso2carbon/wso2-config-volume/repository/conf
-            - name: postgres-connector-jar
-              mountPath: /home/wso2carbon/wso2-artifact-volume/repository/components/dropins
       serviceAccountName: {{ .Values.kubernetes.serviceAccount }}
-      {{- if .Values.wso2.deployment.am.imagePullSecrets }}
-      imagePullSecrets:
-        - name: {{ .Values.wso2.deployment.am.imagePullSecrets }}
-      {{- else if and (not (eq .Values.wso2.subscription.username "")) (not (eq .Values.wso2.subscription.password "")) }}
-      imagePullSecrets:
-        - name: {{ template "am.resource.prefix" . }}-wso2-private-registry-creds
-      {{ end }}
       volumes:
         - name: wso2am-conf
           configMap:
             name: {{ template "am.resource.prefix" . }}-am-conf
-        - name: postgres-connector-jar
-          emptyDir: {}

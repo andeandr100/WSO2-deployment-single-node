@@ -25,15 +25,31 @@ pipeline {
                     sh ('cp /mnt/storage/backup/wso2/internal-keystore.jks internal-keystore.jks')
                     sh ('cp /mnt/storage/backup/wso2/tls-keystore.jks tls-keystore.jks')
 
-                    sh ('docker build -t wso2/am:latest .')
-                    sh ('docker tag wso2/am:latest localhost:32000/wso2:latest')
-                    sh ('docker push localhost:32000/wso2:latest')
+                    //sh ('docker build -t wso2/am:latest .')
+                    //sh ('docker tag wso2/am:latest localhost:32000/wso2:latest')
+                    //sh ('docker push localhost:32000/wso2:latest')
                 }
             }
         }
 
         stage('deploy helm chart'){
             steps {
+                sh ('cat ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml')
+
+                withCredentials([usernamePassword(credentialsId: 'wso2-admin-password', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    // the code here can access $pass and $user
+                    sh ("sed -i 's/{{wso2-password}}/$pass/' ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml")
+                }
+                withCredentials([usernamePassword(credentialsId: 'postgresql-wso2-password', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    // the code here can access $pass and $user
+                    sh ("sed -i 's/{{postgresql-wso2-password}}/$pass/' ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml")
+                }
+
+                sh ('whoami')
+                sh ('pwd')
+                sh ('cat ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml')
+                //sh ('helm upgrade --install wso2 ${WORKSPACE}/am-single --namespace wso2 --create-namespace -f ${WORKSPACE}/am-single/values.yaml')
+
                 echo 'build docker image'
             }
         }
