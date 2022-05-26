@@ -32,6 +32,7 @@ pipeline {
             }
         }
 
+
         stage('deploy helm chart'){
             steps {
                 sh ('cat ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml')
@@ -43,6 +44,14 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'postgresql-wso2-password', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     // the code here can access $pass and $user
                     sh ("sed -i 's/{{postgresql-wso2-password}}/$pass/' ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml")
+                }
+                withCredentials([usernamePassword(credentialsId: 'tls-keystore-password', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    // the code here can access $pass and $user
+                    sh ("sed -i 's/{{tls-keystore-password}}/$pass/' ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml")
+                }
+                withCredentials([usernamePassword(credentialsId: 'internal-keystore-password', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    // the code here can access $pass and $user
+                    sh ("sed -i 's/{{internal-keystore-password}}/$pass/' ${WORKSPACE}/am-single/templates/am/instance/wso2am-am-conf.yaml")
                 }
 
                 sh ('whoami')

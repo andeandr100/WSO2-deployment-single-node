@@ -65,6 +65,21 @@ data:
     alias =  "wso2carbon"
     key_password =  "wso2carbon"
 
+    [keystore.tls]
+    file_name =  "tls-keystore.jks"
+    type =  "JKS"
+    password =  "{{tls-keystore-password}}"
+    alias =  "servertls"
+    key_password =  "{{tls-keystore-password}}"
+
+    [keystore.internal]
+    file_name =  "internal-keystore.jks"
+    type =  "JKS"
+    password =  "{{internal-keystore-password}}"
+    alias =  "encryptkey"
+    key_password =  "{{internal-keystore-password}}"
+
+
     [[apim.gateway.environment]]
     name = "Default"
     type = "hybrid"
